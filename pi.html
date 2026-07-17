@@ -1,0 +1,414 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Androvega Raspberry Pi Setup Guide</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 40px 20px;
+        color: #e6edf3;
+        background: #0d1117;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+      }
+
+      main {
+        width: min(100%, 1000px);
+        margin: 0 auto;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #ffffff;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #30363d;
+      }
+
+      section {
+        margin: 28px 0;
+        padding: 24px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+      }
+
+      .subtitle {
+        margin-top: 0;
+        color: #8b949e;
+      }
+
+      .warning {
+        padding: 16px;
+        color: #ffe8a3;
+        background: #332b00;
+        border: 1px solid #9e7b00;
+        border-radius: 8px;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      pre {
+        padding: 18px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        color: #c9d1d9;
+        background: #010409;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+      }
+
+      li {
+        margin: 8px 0;
+      }
+
+      a {
+        color: #58a6ff;
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+
+      .download-list a {
+        overflow-wrap: anywhere;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 2px 8px;
+        color: #aff5b4;
+        background: #1a3b22;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <header>
+        <h1>Androvega Raspberry Pi Setup Guide</h1>
+        <p class="subtitle">
+          Raspberry Pi 4 and Raspberry Pi 5 installation, AnyDesk and autostart instructions.
+        </p>
+
+        <p class="warning">
+          <strong>Security warning:</strong>
+          Never publish AnyDesk IDs, unattended-access passwords or customer
+          credentials on a public website. Replace the placeholders locally and
+          change all default passwords after installation.
+        </p>
+      </header>
+
+      <section>
+        <h2>Raspberry Pi 4</h2>
+
+        <h3>Prerequisites</h3>
+
+        <ul>
+          <li>Device version: Raspberry Pi 4</li>
+          <li>Operating system: Raspberry Pi OS Legacy 32-bit</li>
+        </ul>
+
+        <h3>Reinstall Raspberry Pi OS</h3>
+
+        <ol>
+          <li>Reboot the Raspberry Pi while holding the <code>Shift</code> key.</li>
+          <li>Select Raspberry Pi OS Legacy 32-bit.</li>
+          <li>Correctly configure the country, keyboard and timezone.</li>
+          <li>Set the username to <code>pi</code>.</li>
+          <li>Create a secure password and save it in the approved password manager.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Install AnyDesk on Raspberry Pi 4</h2>
+
+        <ol>
+          <li>Download the AnyDesk Raspberry Pi <code>armhf.deb</code> version.</li>
+          <li>Install the downloaded package.</li>
+          <li>Run <code>anydesk</code> from the terminal.</li>
+          <li>
+            If AnyDesk reports a GLES or EGL library error, run the commands below.
+          </li>
+        </ol>
+
+        <pre><code>sudo apt update
+  sudo apt install libgles-dev libegl-dev
+
+  sudo ln -s /usr/lib/arm-linux-gnueabihf/libGLESv2.so /usr/lib/libbrcmGLESv2.so
+  sudo ln -s /usr/lib/arm-linux-gnueabihf/libEGL.so /usr/lib/libbrcmEGL.so</code></pre>
+
+        <h3>Enable unattended access</h3>
+
+        <ol>
+          <li>Open AnyDesk on the Raspberry Pi.</li>
+          <li>Open <strong>Settings → Security</strong>.</li>
+          <li>Enable <strong>Unattended Access</strong>.</li>
+          <li>Set a unique password.</li>
+        </ol>
+
+        <pre><code>AnyDesk password: [DO NOT PUBLISH — SET LOCALLY]</code></pre>
+      </section>
+
+      <section>
+        <h2>HDMI Configuration</h2>
+
+        <p>For older Raspberry Pi OS versions:</p>
+
+        <pre><code>sudo nano /boot/config.txt</code></pre>
+
+        <p>For Raspberry Pi OS Bookworm:</p>
+
+        <pre><code>sudo nano /boot/firmware/config.txt</code></pre>
+
+        <p>Add or update the following values:</p>
+
+        <pre><code>disable_overscan=0
+  hdmi_force_hotplug=1
+  hdmi_group=2
+  hdmi_drive=2
+  config_hdmi_boost=4</code></pre>
+
+        <h3>Nano shortcuts</h3>
+
+        <pre><code>Search:          Ctrl + W
+  Save:            Ctrl + O, then Enter
+  Exit:            Ctrl + X
+  Exit after save: Ctrl + X</code></pre>
+
+        <h3>Vi shortcuts</h3>
+
+        <pre><code>Search:              /search_text
+  Enter insert mode:   i
+  Exit insert mode:    Esc
+  Delete character:    x
+  Save and quit:       :wq
+  Quit without saving: :q!</code></pre>
+      </section>
+
+      <section>
+        <h2>Install an Androvega Application</h2>
+
+        <ol>
+          <li>Get the device's AnyDesk ID from the approved Excel sheet.</li>
+          <li>Connect to the correct Customer, Boxing, Kiosk, Kitchen, Map, Pizza Maker or Cashier device.</li>
+          <li>Select the correct download URL for the operating system architecture.</li>
+          <li>Download the AppImage.</li>
+          <li>Make the downloaded AppImage executable.</li>
+        </ol>
+
+        <pre><code>cd /home/pi/Downloads
+  chmod +x application-name.AppImage</code></pre>
+
+        <p>Example:</p>
+
+        <pre><code>chmod +x /home/pi/Downloads/androvega-pos-setup-0.4.23.AppImage</code></pre>
+      </section>
+
+      <section>
+        <h2>Raspberry Pi 4 Autostart</h2>
+
+        <p>Open the LXDE autostart file:</p>
+
+        <pre><code>sudo nano /etc/xdg/lxsession/LXDE-pi/autostart</code></pre>
+
+        <p>Add the application path on a new line:</p>
+
+        <pre><code>@/home/pi/Downloads/androvega-pos-setup-0.4.23.AppImage</code></pre>
+
+        <h3>Application configuration</h3>
+
+        <ul>
+          <li>Open Developer Tools with <code>Ctrl + Shift + I</code>.</li>
+          <li>Initial application login password: <code>123456</code>.</li>
+          <li>Change the default password after setup.</li>
+          <li>Server URL: <code>http://192.168.1.190</code></li>
+          <li>Socket protocol: <code>ws://</code>, not <code>wss://</code>.</li>
+        </ul>
+
+        <h3>Create a desktop shortcut</h3>
+
+        <ol>
+          <li>Open <strong>Preferences</strong>.</li>
+          <li>Open <strong>Main Menu Editor</strong>.</li>
+          <li>Select <strong>New Item</strong>.</li>
+          <li>Enter the application name and AppImage path.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Raspberry Pi 5</h2>
+
+        <h3>Enable desktop autologin</h3>
+
+        <pre><code>sudo raspi-config</code></pre>
+
+        <p>
+          Select:
+          <strong>System Options → Boot / Auto Login → Desktop Autologin</strong>
+        </p>
+
+        <h3>Create an application autostart file</h3>
+
+        <pre><code>mkdir -p ~/.config/autostart
+  nano ~/.config/autostart/boxing.desktop</code></pre>
+
+        <p>Paste the following configuration:</p>
+
+        <pre><code>[Desktop Entry]
+  Type=Application
+  Name=Boxing Screen
+  Exec=/home/pi/Downloads/androvega-boxing-setup-0.4.21.AppImage
+  Terminal=false
+  X-GNOME-Autostart-enabled=true</code></pre>
+
+        <p>Make both files executable:</p>
+
+        <pre><code>chmod +x ~/.config/autostart/boxing.desktop
+  chmod +x /home/pi/Downloads/androvega-boxing-setup-0.4.21.AppImage</code></pre>
+
+        <h3>Start AnyDesk automatically</h3>
+
+        <pre><code>mkdir -p ~/.config/autostart
+  cp /usr/share/applications/anydesk.desktop ~/.config/autostart/</code></pre>
+
+        <p>Restart the device:</p>
+
+        <pre><code>sudo reboot</code></pre>
+
+        <p>
+          Raspberry Pi 5 uses a 64-bit operating system. Download the
+          <code>arm64</code> application whenever an ARM64 version is available.
+        </p>
+      </section>
+
+      <section class="download-list">
+        <h2>Androvega Application Downloads</h2>
+
+        <h3>Customer</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/customer/linux-arm/androvega-customer-setup-0.2.51.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Customer 0.2.51 ARM</a>
+        </p>
+
+        <p>
+          Raspberry Pi 5 — ARM64:
+          <br>
+          <a
+            href="https://updates.androvega.ca/customer/linux-arm64/androvega-customer-setup-0.2.51.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Customer 0.2.51 ARM64</a>
+        </p>
+
+        <h3>Boxing</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/boxing/linux-arm/androvega-boxing-setup-0.4.21.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Boxing 0.4.21 ARM</a>
+        </p>
+
+        <p>
+          Raspberry Pi 5 — ARM64:
+          <br>
+          <a
+            href="https://updates.androvega.ca/boxing/linux-arm64/androvega-boxing-setup-0.4.21.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Boxing 0.4.21 ARM64</a>
+        </p>
+
+        <h3>Kitchen</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/kitchen/linux-arm/androvega-kitchen-setup-0.2.41.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Kitchen 0.2.41 ARM</a>
+        </p>
+
+        <h3>Map</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/map/linux-arm/androvega-map-setup-0.2.22.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Map 0.2.22 ARM</a>
+        </p>
+
+        <p>
+          Raspberry Pi 5 — ARM64:
+          <br>
+          <a
+            href="https://updates.androvega.ca/map/linux-arm64/androvega-map-setup-0.2.22.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Map 0.2.22 ARM64</a>
+        </p>
+
+        <h3>Pizza Maker</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/pizzamaker/linux-arm/androvega-pizzamaker-setup-0.2.22.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Pizza Maker 0.2.22 ARM</a>
+        </p>
+
+        <h3>Cashier / POS</h3>
+
+        <p>
+          Raspberry Pi 4 — ARM 32-bit:
+          <br>
+          <a
+            href="https://updates.androvega.ca/pos/linux-arm/androvega-pos-setup-0.4.23.AppImage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download Cashier 0.4.23 ARM</a>
+        </p>
+      </section>
+    </main>
+  </body>
+  </html>
