@@ -86,3 +86,4 @@ Cashier
 Raspberry pi
 https://updates.androvega.ca/pos/linux-arm/androvega-pos-setup-0.4.22.AppImage
 
+https://appflowy.com/app/9f1c1f31-ac39-40b1-a4f2-0c180752245d/f0a0bd83-d028-4bfd-934f-1c8ded19ae1e
