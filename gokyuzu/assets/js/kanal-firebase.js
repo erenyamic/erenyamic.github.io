@@ -238,11 +238,18 @@ const Ates = (function () {
     kok.child('ki').on('value', (s) => {
       const v = s.val() || {};
       const su = Date.now();
-      const liste = Object.entries(v).map(([id, k]) => ({
-        id, ad: k.ad || '', sayfa: k.sayfa || '',
-        cevrimici: (su - (k.t || 0)) < 70000     // onDisconnect başarısız olursa diye
-      }));
-      if (!liste.some(k => k.id === ben.id)) liste.push({ id: ben.id, ad: ben.ad, sayfa, cevrimici: true });
+      const eskiler = {};
+      const liste = Object.entries(v).map(([id, k]) => {
+        const yas = su - (k.t || 0);
+        // çok eski kayıtlar (kopmuş oturumlar) temizlensin
+        if (yas > 300000 && id !== ben.id) eskiler[id] = null;
+        return {
+          id, ad: k.ad || '', rol: k.rol || '', sayfa: k.sayfa || '',
+          cevrimici: yas < 70000            // onDisconnect başarısız olursa diye
+        };
+      }).filter(k => !(k.id in eskiler));
+      if (Object.keys(eskiler).length) { try { kok.child('ki').update(eskiler); } catch (e) {} }
+      if (!liste.some(k => k.id === ben.id)) liste.push({ id: ben.id, ad: ben.ad, rol: ben.rol, sayfa, cevrimici: true });
       cagri.kisiler(liste, liste.filter(k => k.cevrimici).map(k => k.id).sort());
     });
   }
@@ -263,10 +270,12 @@ const Ates = (function () {
   }
 
   /* ---------- varlık ---------- */
+  let baglantiRef = null;
   function varlikKur() {
     const benimRef = kok.child('ki').child(ben.id);
-    const yaz = () => benimRef.set({ ad: ben.ad, sayfa: sayfa, t: Date.now() });
-    db.ref('.info/connected').on('value', (s) => {
+    const yaz = () => benimRef.set({ ad: ben.ad, rol: ben.rol, sayfa: sayfa, t: Date.now() });
+    baglantiRef = db.ref('.info/connected');
+    baglantiRef.on('value', (s) => {
       if (s.val() === false) return;
       benimRef.onDisconnect().remove();
       kok.child('an').child(ben.id).onDisconnect().remove();
@@ -379,13 +388,17 @@ const Ates = (function () {
   }
 
   function dur() {
-    if (nabizT) clearInterval(nabizT);
+    if (nabizT) { clearInterval(nabizT); nabizT = null; }
+    try { if (baglantiRef) { baglantiRef.off(); baglantiRef = null; } } catch (e) {}
     try { if (kok) kok.off(); } catch (e) {}
   }
 
   function ayril() {
     try {
       if (!kok) return;
+      // varlığın geri yazılmasın diye önce nabzı ve bağlantı dinleyicisini kes
+      if (nabizT) { clearInterval(nabizT); nabizT = null; }
+      if (baglantiRef) { baglantiRef.off(); baglantiRef = null; }
       kok.child('ki').child(ben.id).remove();
       kok.child('an').child(ben.id).remove();
     } catch (e) {}
@@ -393,7 +406,7 @@ const Ates = (function () {
 
   function sayfaBildir(y) {
     sayfa = y;
-    try { if (kok) kok.child('ki').child(ben.id).update({ sayfa: y, t: Date.now() }); } catch (e) {}
+    try { if (kok) kok.child('ki').child(ben.id).update({ sayfa: y, rol: ben.rol, t: Date.now() }); } catch (e) {}
   }
 
   async function odayiSil() {

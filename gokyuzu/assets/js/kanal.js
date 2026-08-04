@@ -114,7 +114,7 @@ const Kanal = (function () {
   }
 
   function temelParam(ek) {
-    return Object.assign({ oda: ayar.oda, kim: ben.id, ad: ben.ad, sayfa }, ek || {});
+    return Object.assign({ oda: ayar.oda, kim: ben.id, ad: ben.ad, rol: ben.rol, sayfa }, ek || {});
   }
 
   async function anlikGoruntu() {
@@ -196,8 +196,8 @@ const Kanal = (function () {
       const acik = simdi - k.son < 9000;
       if (k.acik !== acik) { k.acik = acik; degisti = true; }
     });
-    const liste = [{ id: ben.id, ad: ben.ad, sayfa, cevrimici: true }];
-    yerelKisiler.forEach((k, id) => liste.push({ id, ad: k.ad, sayfa: k.sayfa, cevrimici: k.acik }));
+    const liste = [{ id: ben.id, ad: ben.ad, rol: ben.rol, sayfa, cevrimici: true }];
+    yerelKisiler.forEach((k, id) => liste.push({ id, ad: k.ad, rol: k.rol, sayfa: k.sayfa, cevrimici: k.acik }));
     kisiler = liste;
     const kume = liste.filter(k => k.cevrimici).map(k => k.id).sort().join(',');
     if (kume !== cevrimiciKume || degisti) { cevrimiciKume = kume; dagit('*kisiler', kisiler); }
@@ -216,13 +216,13 @@ const Kanal = (function () {
           olayIsle(m.olay);
           yerelKaydet();
         } else if (m.tur === 'nabiz' && m.id !== ben.id) {
-          yerelKisiler.set(m.id, { ad: m.ad, sayfa: m.sayfa, son: Date.now(), acik: true });
+          yerelKisiler.set(m.id, { ad: m.ad, rol: m.rol, sayfa: m.sayfa, son: Date.now(), acik: true });
           yerelKisileriTazele();
         } else if (m.tur === 'ayril' && m.id !== ben.id) {
           yerelKisiler.delete(m.id); yerelKisileriTazele();
         }
       };
-      const nabiz = () => { if (bc) bc.postMessage({ tur: 'nabiz', id: ben.id, ad: ben.ad, sayfa }); yerelKisileriTazele(); };
+      const nabiz = () => { if (bc) bc.postMessage({ tur: 'nabiz', id: ben.id, ad: ben.ad, rol: ben.rol, sayfa }); yerelKisileriTazele(); };
       nabiz();
       yerelNabiz = setInterval(nabiz, 3000);
     } catch (e) { /* BroadcastChannel yok */ }
@@ -318,11 +318,22 @@ const Kanal = (function () {
     sayfa = yeni;
     if (mod === 'firebase') { Ates.sayfaBildir(yeni); }
     else if (mod === 'sunucu') { istek(temelParam({ aksiyon: 'varlik' })).catch(() => {}); }
-    else if (bc) { try { bc.postMessage({ tur: 'nabiz', id: ben.id, ad: ben.ad, sayfa }); } catch (e) {} }
+    else if (bc) { try { bc.postMessage({ tur: 'nabiz', id: ben.id, ad: ben.ad, rol: ben.rol, sayfa }); } catch (e) {} }
   }
 
+  /* Eşi bulurken kimliğe değil ROLE bakılır. Aynı kişi iki cihazdan
+     girdiğinde (telefon + bilgisayar) kendini eş sanmasın diye. */
   function es() {
-    return kisiler.find(k => k.id !== ben.id) || null;
+    // 1. tercih: rolü benden farklı VE çevrimiçi olan
+    // 2. tercih: rolü bilinmeyen ama çevrimiçi (eski sürümden bağlanmış olabilir)
+    // 3-4. tercih: aynı sıra, çevrimdışı olanlar
+    const digerRol  = kisiler.filter(k => k.rol && k.rol !== ben.rol);
+    const rolsuzler = kisiler.filter(k => !k.rol && k.id !== ben.id);
+    return digerRol.find(k => k.cevrimici)
+        || rolsuzler.find(k => k.cevrimici)
+        || digerRol[0]
+        || rolsuzler[0]
+        || null;
   }
   function esCevrimici() {
     const e = es();

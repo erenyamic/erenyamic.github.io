@@ -24,7 +24,7 @@ window.AYAR = {
   /* --- 3) BAŞLANGIÇ TARİHİ --------------------------------
      Tanıştığınız / birlikte olduğunuz gün.
      Biçim: "YIL-AY-GÜN SAAT:DAKİKA"                           */
-  baslangic: "2018-09-22 00:00",
+  baslangic: "2022-12-21 00:00",
 
   /* --- 4) SİTE METİNLERİ ---------------------------------- */
   site: {
@@ -114,11 +114,11 @@ window.AYAR = {
      önce resmi assets/img/ klasörüne at, sonra
      foto: "assets/img/ilk-bulusma.jpg" yaz.                  */
   zamanTuneli: [
-    { tarih: "2018", baslik: "İlk Bakış",        metin: "Seni ilk gördüğüm an. Ne konuştuğumuzu hatırlamıyorum ama nasıl hissettiğimi hatırlıyorum.", foto: "" },
-    { tarih: "2019", baslik: "İlk Yolculuk",     metin: "Yolu kaybettik, saatlerce güldük. En iyi anılar plansız olanlarmış.", foto: "" },
-    { tarih: "2020", baslik: "Zor Bir Yıl",      metin: "Her şey zorlaştı ama sen yanımdaydın. O yüzden dayanabildim.", foto: "" },
-    { tarih: "2021", baslik: "Evet Dediğin Gün", metin: "Hayatımın en güzel 'evet'i. Hâlâ inanamıyorum.", foto: "" },
-    { tarih: "2022", baslik: "Bizim Evimiz",     metin: "Dört duvarı eve çeviren şeyin sen olduğunu orada anladım.", foto: "" },
+    { tarih: "2022", baslik: "İlk Bakış",        metin: "Seni ilk gördüğüm an. Ne konuştuğumuzu hatırlamıyorum ama nasıl hissettiğimi hatırlıyorum.", foto: "" },
+    { tarih: "2023", baslik: "İlk Yolculuk",     metin: "Yolu kaybettik, saatlerce güldük. En iyi anılar plansız olanlarmış.", foto: "" },
+    { tarih: "2024", baslik: "Zor Bir Yıl",      metin: "Her şey zorlaştı ama sen yanımdaydın. O yüzden dayanabildim.", foto: "" },
+    { tarih: "2025", baslik: "Evet Dediğin Gün", metin: "Hayatımın en güzel 'evet'i. Hâlâ inanamıyorum.", foto: "" },
+    { tarih: "2026", baslik: "Bizim Evimiz",     metin: "Dört duvarı eve çeviren şeyin sen olduğunu orada anladım.", foto: "" },
     { tarih: "Bugün", baslik: "Ve Devam Ediyor", metin: "Hikâyenin en güzel kısmı: daha bitmedi.", foto: "" }
   ],
 

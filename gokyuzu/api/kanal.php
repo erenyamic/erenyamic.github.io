@@ -143,13 +143,13 @@ function odaYaz(string $dosya, callable $islem) {
 }
 
 /** Kişiyi çevrimiçi olarak damgalar. Yeni geldiyse true döner. */
-function varlikDamgala(array &$d, string $id, string $ad, string $sayfa): bool {
+function varlikDamgala(array &$d, string $id, string $ad, string $sayfa, string $rol = ''): bool {
     $simdi = microtime(true);
     $yeni = true;
     if (isset($d['kisiler'][$id]) && is_array($d['kisiler'][$id])) {
         $yeni = ($simdi - (float)($d['kisiler'][$id]['son'] ?? 0)) > CEVRIMICI_SN;
     }
-    $d['kisiler'][$id] = ['ad' => $ad, 'son' => $simdi, 'sayfa' => $sayfa];
+    $d['kisiler'][$id] = ['ad' => $ad, 'son' => $simdi, 'sayfa' => $sayfa, 'rol' => $rol];
     return $yeni;
 }
 
@@ -173,6 +173,7 @@ function kisilerCiktisi(array $d): array {
         $out[] = [
             'id'        => (string)$id,
             'ad'        => (string)($k['ad'] ?? ''),
+            'rol'       => (string)($k['rol'] ?? ''),
             'sayfa'     => (string)($k['sayfa'] ?? ''),
             'cevrimici' => ($simdi - (float)($k['son'] ?? 0)) <= CEVRIMICI_SN,
             'oncekiSn'  => round($simdi - (float)($k['son'] ?? 0), 1),
@@ -322,6 +323,7 @@ $oda     = kimlik($g['oda'] ?? 'varsayilan');
 $id      = kimlik($g['kim'] ?? '');
 $ad      = metin($g['ad'] ?? '', 40);
 $sayfa   = metin($g['sayfa'] ?? '', 40);
+$rol     = metin($g['rol'] ?? '', 8);
 $dosya   = odaDosyasi($oda);
 
 if ($aksiyon === 'ping') {
@@ -341,8 +343,8 @@ switch ($aksiyon) {
 
     /* Tam durum anlık görüntüsü + katılım */
     case 'durum': {
-        $sonuc = odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa) {
-            $yeni = varlikDamgala($d, $id, $ad, $sayfa);
+        $sonuc = odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa, $rol) {
+            $yeni = varlikDamgala($d, $id, $ad, $sayfa, $rol);
             if ($yeni) olayEkle($d, 'katildi', ['ad' => $ad], $id, $ad);
             return true;
         });
@@ -363,8 +365,8 @@ switch ($aksiyon) {
         $veri = $g['veri'] ?? null;
         if ($tip === '') cikti(['hata' => 'tip gerekli'], 400);
 
-        $olay = odaYaz($dosya, static function (array &$d) use ($tip, $veri, $id, $ad, $sayfa) {
-            varlikDamgala($d, $id, $ad, $sayfa);
+        $olay = odaYaz($dosya, static function (array &$d) use ($tip, $veri, $id, $ad, $sayfa, $rol) {
+            varlikDamgala($d, $id, $ad, $sayfa, $rol);
             return olayEkle($d, $tip, $veri, $id, $ad);
         });
         cikti(['tamam' => true, 'seq' => $olay['s']]);
@@ -372,8 +374,8 @@ switch ($aksiyon) {
 
     /* Sadece "buradayım" de (olay üretmeden) */
     case 'varlik': {
-        odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa) {
-            varlikDamgala($d, $id, $ad, $sayfa);
+        odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa, $rol) {
+            varlikDamgala($d, $id, $ad, $sayfa, $rol);
             return true;
         });
         cikti(['tamam' => true]);
@@ -407,8 +409,8 @@ switch ($aksiyon) {
         $pset  = (string)($g['pset'] ?? '');
 
         // İsteğe başlarken varlığımızı tazele ve gerekiyorsa katılım olayı üret.
-        odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa) {
-            $yeni = varlikDamgala($d, $id, $ad, $sayfa);
+        odaYaz($dosya, static function (array &$d) use ($id, $ad, $sayfa, $rol) {
+            $yeni = varlikDamgala($d, $id, $ad, $sayfa, $rol);
             if ($yeni) olayEkle($d, 'katildi', ['ad' => $ad], $id, $ad);
             return true;
         });
