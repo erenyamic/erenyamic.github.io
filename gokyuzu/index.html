@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aynı Gökyüzü</title>
+<meta name="description" content="İki kişi, iki ayrı yer, tek bir gökyüzü.">
+<meta name="theme-color" content="#07040f">
+<meta name="robots" content="noindex, nofollow">
+
+<!-- WhatsApp / mesajlaşma önizlemesi -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://erenyamic.github.io/gokyuzu/">
+<meta property="og:title" content="Aynı Gökyüzü">
+<meta property="og:description" content="Sana özel bir şey yaptım. Aç bakalım. ✨">
+<meta property="og:image" content="https://erenyamic.github.io/gokyuzu/assets/img/onizleme.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://erenyamic.github.io/gokyuzu/assets/img/onizleme.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- arka plan -->
+<canvas id="gokyuzu" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<!-- üst çubuk -->
+<header class="tepe">
+  <div class="tepe-sol">
+    <a class="marka" href="#/ana" id="marka">Aynı Gökyüzü</a>
+  </div>
+  <div class="tepe-sag">
+    <span class="durum-yazi" id="durumYazi"></span>
+    <div class="kisiler" id="kisilerKutu"></div>
+    <button class="ikon-dugme" id="muzikTus" title="Müzik" aria-label="Müzik">🎵</button>
+  </div>
+</header>
+
+<!-- sayfa gövdesi -->
+<main id="uygulama"></main>
+
+<!-- katmanlar -->
+<div id="bildirimler" aria-live="polite"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="esImlec" aria-hidden="true" style="display:none">
+  <span class="kuyruk"></span><span class="ad"></span>
+</div>
+
+<!-- fısıltı -->
+<button id="fisiltiTus" title="Fısıltı" aria-label="Fısıltı">💬</button>
+
+<!-- giriş perdesi -->
+<div id="kapi" hidden></div>
+
+<noscript>
+  <div style="padding:60px 24px;text-align:center;color:#f6f2ff;font-family:system-ui">
+    <h1>Aynı Gökyüzü</h1>
+    <p>Bu sayfanın çalışması için JavaScript gerekiyor. Tarayıcı ayarlarından açabilirsin.</p>
+  </div>
+</noscript>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/kanal-firebase.js"></script>
+<script src="assets/js/kanal.js"></script>
+<script src="assets/js/arkaplan.js"></script>
+<script src="assets/js/muzik.js"></script>
+<script src="assets/js/router.js"></script>
+
+<script src="assets/js/views/ana.js"></script>
+<script src="assets/js/views/yildizharitasi.js"></script>
+<script src="assets/js/views/kalpsenkronu.js"></script>
+<script src="assets/js/views/uyum.js"></script>
+<script src="assets/js/views/cizim.js"></script>
+<script src="assets/js/views/cark.js"></script>
+<script src="assets/js/views/kuponlar.js"></script>
+<script src="assets/js/views/sayac.js"></script>
+<script src="assets/js/views/tunel.js"></script>
+<script src="assets/js/views/mektup.js"></script>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
