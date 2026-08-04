@@ -411,6 +411,9 @@
      İLK YILDIZLAR (gökyüzü tamamen boşsa)
      --------------------------------------------------------- */
   function tohumEk() {
+    // Başlangıç yıldızlarını yalnızca siteyi hazırlayan taraf ekler.
+    // (İkisi aynı anda girerse yıldızlar iki kez eklenmesin diye.)
+    if (Kanal.ben.rol !== 'ben') return;
     if (Kayit.al('tohum', false)) return;
     if ((Kanal.durum.yildizlar || []).length) { Kayit.yaz('tohum', true); return; }
     (A.baslangicYildizlari || []).forEach((y, i) => {
