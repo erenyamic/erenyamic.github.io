@@ -446,6 +446,7 @@
     EsImlec.kur();
     muzikKur();
     surprizKur();
+    Kur.baslat();
     tohumEk();
 
     Yol.basla();

@@ -20,13 +20,19 @@
 <meta name="twitter:image" content="https://erenyamic.github.io/gokyuzu/assets/img/onizleme.jpg">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="assets/img/ikon-192.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="assets/css/style.css?s=2">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gökyüzü">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="stylesheet" href="assets/css/style.css?s=3">
 </head>
 <body>
 
@@ -42,6 +48,8 @@
   <div class="tepe-sag">
     <span class="durum-yazi" id="durumYazi"></span>
     <div class="kisiler" id="kisilerKutu"></div>
+    <button class="ikon-dugme" id="bildirimTus" title="Bildirimler" aria-label="Bildirimler" hidden>🔕</button>
+    <button class="ikon-dugme vurgulu" id="kurTus" title="Telefona ekle" aria-label="Telefona ekle" hidden>📲</button>
     <button class="ikon-dugme" id="muzikTus" title="Müzik" aria-label="Müzik">🎵</button>
   </div>
 </header>
@@ -69,25 +77,30 @@
   </div>
 </noscript>
 
-<script src="assets/js/config.js?s=2"></script>
-<script src="assets/js/utils.js?s=2"></script>
-<script src="assets/js/kanal-firebase.js?s=2"></script>
-<script src="assets/js/kanal.js?s=2"></script>
-<script src="assets/js/arkaplan.js?s=2"></script>
-<script src="assets/js/muzik.js?s=2"></script>
-<script src="assets/js/router.js?s=2"></script>
+<script src="assets/js/config.js?s=3"></script>
+<script src="assets/js/utils.js?s=3"></script>
+<script src="assets/js/kanal-firebase.js?s=3"></script>
+<script src="assets/js/kanal.js?s=3"></script>
+<script src="assets/js/arkaplan.js?s=3"></script>
+<script src="assets/js/muzik.js?s=3"></script>
+<script src="assets/js/medya.js?s=3"></script>
+<script src="assets/js/router.js?s=3"></script>
 
-<script src="assets/js/views/ana.js?s=2"></script>
-<script src="assets/js/views/yildizharitasi.js?s=2"></script>
-<script src="assets/js/views/kalpsenkronu.js?s=2"></script>
-<script src="assets/js/views/uyum.js?s=2"></script>
-<script src="assets/js/views/cizim.js?s=2"></script>
-<script src="assets/js/views/cark.js?s=2"></script>
-<script src="assets/js/views/kuponlar.js?s=2"></script>
-<script src="assets/js/views/sayac.js?s=2"></script>
-<script src="assets/js/views/tunel.js?s=2"></script>
-<script src="assets/js/views/mektup.js?s=2"></script>
+<script src="assets/js/views/ana.js?s=3"></script>
+<script src="assets/js/views/yildizharitasi.js?s=3"></script>
+<script src="assets/js/views/duvar.js?s=3"></script>
+<script src="assets/js/views/kalpsenkronu.js?s=3"></script>
+<script src="assets/js/views/uyum.js?s=3"></script>
+<script src="assets/js/views/cizim.js?s=3"></script>
+<script src="assets/js/views/cark.js?s=3"></script>
+<script src="assets/js/views/gunluk.js?s=3"></script>
+<script src="assets/js/views/kapsul.js?s=3"></script>
+<script src="assets/js/views/kuponlar.js?s=3"></script>
+<script src="assets/js/views/sayac.js?s=3"></script>
+<script src="assets/js/views/tunel.js?s=3"></script>
+<script src="assets/js/views/mektup.js?s=3"></script>
 
-<script src="assets/js/app.js?s=2"></script>
+<script src="assets/js/pwa.js?s=3"></script>
+<script src="assets/js/app.js?s=3"></script>
 </body>
 </html>

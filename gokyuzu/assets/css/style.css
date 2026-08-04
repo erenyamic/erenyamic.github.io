@@ -808,3 +808,140 @@ body.beraber .aurora { opacity: .85; }
   .kure p { font-size: 11.8px; }
   .sayac-birim { min-width: 68px; padding: 14px 8px; }
 }
+
+/* ============================================================
+   MEDYA — fotoğraf / ses eklentileri
+   ============================================================ */
+.ikon-dugme.buyukce { width: 46px; height: 46px; font-size: 18px; }
+.ikon-dugme.kaydediyor {
+  background: rgba(255,90,120,.22); border-color: rgba(255,90,120,.6);
+  animation: kayitNabiz 1.1s ease-in-out infinite;
+}
+@keyframes kayitNabiz { 0%,100%{ box-shadow:0 0 0 0 rgba(255,90,120,.5);} 50%{ box-shadow:0 0 0 10px rgba(255,90,120,0);} }
+
+.ek-onizleme {
+  display: flex; align-items: center; gap: 14px; margin-top: 16px;
+  padding: 12px 14px; border-radius: var(--r-md);
+  background: var(--cam); border: 1px solid var(--çizgi);
+  animation: yukselA .3s ease both;
+}
+.ek-onizleme img { width: 74px; height: 74px; object-fit: cover; border-radius: 10px; flex: none; }
+.ek-onizleme audio { max-width: 260px; height: 36px; }
+.ek-onizleme .ek-bilgi { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; min-width: 0; }
+.ek-onizleme .ek-bilgi b { font-weight: 500; }
+.ek-onizleme .ek-bilgi .sonuk { font-size: 12px; }
+.ek-onizleme #ekKaldir { margin-left: auto; flex: none; }
+.ek-onizleme.kayit { border-color: rgba(255,90,120,.45); }
+.kirmizi-nokta {
+  width: 13px; height: 13px; border-radius: 50%; background: #ff5a78; flex: none;
+  animation: kayitNabiz 1.1s ease-in-out infinite;
+}
+
+.yildiz.foto::after { box-shadow: 0 0 10px 3px rgba(255,255,255,.8), 0 0 26px 9px var(--renk); width: 11px; height: 11px; }
+.yildiz.ses::after  { box-shadow: 0 0 10px 3px rgba(255,255,255,.8), 0 0 26px 9px var(--renk); width: 11px; height: 11px; }
+.yildiz.foto::before, .yildiz.ses::before {
+  content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.4);
+}
+
+.yildiz-balon .balon-medya { margin-bottom: 9px; }
+.yildiz-balon .balon-medya img {
+  display: block; width: 100%; max-width: 240px; border-radius: 10px; cursor: zoom-in;
+}
+.yildiz-balon .balon-medya audio { width: 240px; max-width: 100%; height: 38px; }
+
+.foto-perde { cursor: zoom-out; }
+.foto-perde img {
+  max-width: min(94vw, 1100px); max-height: 88vh;
+  border-radius: 12px; box-shadow: var(--golge);
+  animation: yukselA .3s cubic-bezier(.2,.8,.3,1.2) both;
+}
+
+/* ---------- Anı duvarı ---------- */
+.duvar-agi { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.polaroid {
+  margin: 0; padding: 12px 12px 14px; border-radius: 4px;
+  background: linear-gradient(165deg, #fdf6ec, #f3e6dc);
+  box-shadow: 0 18px 40px -20px rgba(0,0,0,.9);
+  transform: rotate(var(--egim, 0deg));
+  transition: transform .25s cubic-bezier(.2,.9,.3,1.2);
+  animation: yukselA .5s ease both;
+}
+.polaroid:hover { transform: rotate(0deg) translateY(-5px) scale(1.02); z-index: 2; }
+.polaroid-ic {
+  aspect-ratio: 1; border-radius: 2px; overflow: hidden;
+  background: #1a1030; display: grid; place-items: center;
+}
+.polaroid-ic img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; display: block; }
+.polaroid-ic.ses { flex-direction: column; gap: 12px; background: linear-gradient(160deg,#241542,#150c2e); padding: 14px; }
+.polaroid-ic .ses-ikon { font-size: 42px; }
+.polaroid-ic audio { width: 100%; height: 36px; }
+.polaroid figcaption { display: block; margin-top: 11px; color: #4a3740; }
+.polaroid .not { display: block; font-family: var(--yazi-el); font-size: 19px; line-height: 1.25; }
+.polaroid .alt { display: block; margin-top: 5px; font-size: 11px; opacity: .6; }
+
+/* ---------- Günlük soru ---------- */
+#gunlukGovde textarea, #kapsulForm textarea {
+  width: 100%; padding: 14px 16px; border-radius: var(--r-md);
+  background: rgba(255,255,255,.06); border: 1px solid var(--çizgi);
+  color: var(--mürekkep); font-family: inherit; font-size: 15px; line-height: 1.6;
+  resize: vertical; outline: none;
+}
+#gunlukGovde textarea:focus, #kapsulForm textarea:focus { border-color: var(--vurgu); background: rgba(255,255,255,.10); }
+
+.gunluk-cevap {
+  margin-top: 12px; padding: 14px 16px; border-radius: var(--r-md);
+  border: 1px solid var(--çizgi); animation: yukselA .4s ease both;
+}
+.gunluk-cevap.benim { background: rgba(126,232,250,.10); border-color: rgba(126,232,250,.26); }
+.gunluk-cevap.onun  { background: rgba(255,143,171,.10); border-color: rgba(255,143,171,.26); }
+.gunluk-cevap .kim { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mürekkep-sönük); }
+.gunluk-cevap p { margin: 6px 0 0; font-size: 15px; line-height: 1.65; white-space: pre-wrap; }
+
+.gecen-yil {
+  margin-top: 22px; padding: 20px 22px; border-radius: var(--r-lg);
+  border: 1px dashed rgba(255,217,125,.32); background: rgba(255,217,125,.05);
+}
+.gecen-yil p { margin: 8px 0 0; font-size: 14.5px; line-height: 1.65; color: var(--mürekkep-yumusak); }
+
+.arsiv-gun {
+  padding: 16px 18px; border-radius: var(--r-md); margin-bottom: 10px;
+  background: var(--cam); border: 1px solid var(--çizgi);
+}
+.arsiv-gun .tarih { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--altın); }
+.arsiv-gun .soru { margin: 6px 0 10px; font-family: var(--yazi-baslik); font-style: italic; font-size: 17px; }
+.arsiv-gun .cevap { margin: 4px 0; font-size: 14px; line-height: 1.6; color: var(--mürekkep-yumusak); }
+
+/* ---------- Zaman kapsülü ---------- */
+#kapsulTarih {
+  padding: 10px 14px; border-radius: 999px; font-family: inherit; font-size: 14px;
+  background: rgba(255,255,255,.07); border: 1px solid var(--çizgi);
+  color: var(--mürekkep); outline: none; color-scheme: dark;
+}
+#kapsulTarih:focus { border-color: var(--vurgu); }
+
+.kapsul-agi { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.kapsul {
+  position: relative; padding: 22px 20px; border-radius: var(--r-lg);
+  border: 1px solid var(--çizgi); background: var(--cam);
+  animation: yukselA .5s ease both;
+}
+.kapsul.acik {
+  border-color: rgba(200,162,255,.35);
+  background: linear-gradient(160deg, rgba(200,162,255,.12), rgba(126,232,250,.05));
+}
+.kapsul.kilitli { text-align: center; }
+.kapsul .kilit-ikon { font-size: 30px; display: block; margin-bottom: 10px; opacity: .8; }
+.kapsul-tarih { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--altın); }
+.kapsul-metin { margin: 12px 0 10px; font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+.kapsul-geri { margin: 8px 0 10px; font-family: var(--yazi-baslik); font-style: italic; font-size: 20px; }
+.kapsul-alt { font-size: 11.5px; color: var(--mürekkep-sönük); }
+.kapsul .kapsul-sil { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; font-size: 15px; }
+
+/* ---------- PWA düğmeleri ---------- */
+.ikon-dugme.vurgulu {
+  background: linear-gradient(150deg, rgba(255,143,171,.9), rgba(200,162,255,.9));
+  border-color: rgba(255,255,255,.3); color: #16091f;
+  animation: kurNabiz 2.6s ease-in-out infinite;
+}
+@keyframes kurNabiz { 0%,100%{ box-shadow:0 0 0 0 rgba(255,143,171,.45);} 55%{ box-shadow:0 0 0 9px rgba(255,143,171,0);} }

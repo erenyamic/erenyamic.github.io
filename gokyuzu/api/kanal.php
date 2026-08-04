@@ -35,6 +35,7 @@ define('MAX_OLAY',     300);   // hafızada tutulan son olay sayısı
 define('MAX_YILDIZ',   400);
 define('MAX_CIZGI',    4000);
 define('MAX_SOHBET',   150);
+define('MAX_MEDYA',    60);    // PHP modunda saklanan fotoğraf/ses sayısı
 
 @ini_set('max_execution_time', (string)(BEKLE_SN + 15));
 @set_time_limit(BEKLE_SN + 15);
@@ -91,6 +92,9 @@ function bosOda(): array {
             'sohbet'    => [],
             'senkron'   => ['sayi' => 0, 'son' => 0],
             'cark'      => null,
+            'gunluk'    => (object)[],
+            'kapsul'    => [],
+            'medya'     => (object)[],
         ],
     ];
 }
@@ -210,6 +214,8 @@ function durumaYansit(array &$d, string $tip, $veri, string $id, string $ad): vo
             if (!is_array($veri)) return;
             $du['yildizlar'][] = [
                 'id'    => metin($veri['id'] ?? uniqid('y', true), 40),
+                'tur'   => metin($veri['tur'] ?? 'metin', 10),
+                'mid'   => metin($veri['mid'] ?? '', 40),
                 'x'     => max(0.02, min(0.98, (float)($veri['x'] ?? 0.5))),
                 'y'     => max(0.02, min(0.98, (float)($veri['y'] ?? 0.5))),
                 'metin' => metin($veri['metin'] ?? '', 280),
@@ -299,6 +305,45 @@ function durumaYansit(array &$d, string $tip, $veri, string $id, string $ad): vo
             if (!is_array($veri)) return;
             $du['cark'] = ['no' => (int)($veri['no'] ?? 0), 'ad' => $ad, 't' => round(microtime(true))];
             break;
+
+        case 'gunluk': {
+            if (!is_array($veri)) return;
+            $g = (array)$du['gunluk'];
+            $gun = metin($veri['gun'] ?? '', 12);
+            if ($gun === '') return;
+            if (!isset($g[$gun]) || !is_array($g[$gun])) $g[$gun] = [];
+            $g[$gun][$id] = ['metin' => metin($veri['metin'] ?? '', 1200), 'ad' => $ad, 't' => round(microtime(true))];
+            $du['gunluk'] = $g;
+            break;
+        }
+
+        case 'kapsul':
+            if (!is_array($veri)) return;
+            $du['kapsul'][] = [
+                'id'     => metin($veri['id'] ?? uniqid('k', true), 40),
+                'metin'  => metin($veri['metin'] ?? '', 2000),
+                'acilis' => metin($veri['acilis'] ?? '', 12),
+                'kim'    => $id, 'ad' => $ad, 't' => round(microtime(true)),
+            ];
+            break;
+
+        case 'kapsul-sil': {
+            $h = metin(is_array($veri) ? ($veri['id'] ?? '') : $veri, 40);
+            $du['kapsul'] = array_values(array_filter((array)$du['kapsul'],
+                static fn($k) => ($k['id'] ?? '') !== $h));
+            break;
+        }
+
+        case 'medya': {
+            if (!is_array($veri)) return;
+            $m = (array)$du['medya'];
+            $mid = metin($veri['mid'] ?? '', 40);
+            if ($mid === '') return;
+            $m[$mid] = (string)($veri['veri'] ?? '');
+            if (count($m) > MAX_MEDYA) $m = array_slice($m, -MAX_MEDYA, null, true);
+            $du['medya'] = $m;
+            break;
+        }
 
         case 'fisilti':
             if (!is_array($veri)) return;

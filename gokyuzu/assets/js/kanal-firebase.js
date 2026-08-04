@@ -23,7 +23,7 @@ const Ates = (function () {
   const SDK_SURUMLERI = ['10.12.2', '9.23.0'];
   let db = null, kok = null, ben = null, cagri = null, durum = null, oda = '';
   let hazir = false, nabizT = null, sayfa = '';
-  const bilinen = { y: new Set(), b: new Set(), c: new Set(), s: new Set(), kp: new Set() };
+  const bilinen = { y: new Set(), b: new Set(), c: new Set(), s: new Set(), kp: new Set(), ks: new Set() };
   let sonSenkron = 0, sonCark = 0;
 
   /* ---------- SDK yükleme ---------- */
@@ -76,7 +76,8 @@ const Ates = (function () {
   function durumKur(anlik) {
     const v = anlik || {};
     durum.yildizlar = nesneDizi(v.y).map(([id, y]) => ({
-      id, x: +y.x, y: +y.y, metin: y.metin || '', kim: y.kim || '', ad: y.ad || '', t: y.t || 0
+      id, x: +y.x, y: +y.y, metin: y.metin || '', tur: y.tur || 'metin', mid: y.mid || '',
+      kim: y.kim || '', ad: y.ad || '', t: y.t || 0
     })).sort((a, b) => (a.t || 0) - (b.t || 0));
     nesneDizi(v.y).forEach(([id]) => bilinen.y.add(id));
 
@@ -103,6 +104,20 @@ const Ates = (function () {
     sonSenkron = durum.senkron.sayi;
     durum.cark = v.ck ? { no: +v.ck.no, ad: v.ck.ad || '', t: v.ck.t || 0 } : null;
     sonCark = durum.cark ? durum.cark.t : 0;
+
+    durum.gunluk = {};
+    nesneDizi(v.gn).forEach(([gun, cevaplar]) => {
+      durum.gunluk[gun] = {};
+      nesneDizi(cevaplar).forEach(([kim, c]) => {
+        durum.gunluk[gun][kim] = { metin: c.metin || '', ad: c.ad || '', t: c.t || 0 };
+      });
+    });
+
+    durum.kapsul = nesneDizi(v.ks).map(([id, k]) => ({
+      id, metin: k.metin || '', acilis: k.acilis || '', kim: k.kim || '', ad: k.ad || '', t: k.t || 0
+    })).sort((a, b) => String(a.acilis).localeCompare(String(b.acilis)));
+    nesneDizi(v.ks).forEach(([id]) => bilinen.ks.add(id));
+    durum.medya = durum.medya || {};
   }
 
   /* ---------- dinleyiciler ---------- */
@@ -113,9 +128,11 @@ const Ates = (function () {
       const id = s.key, y = s.val() || {};
       if (bilinen.y.has(id)) return;
       bilinen.y.add(id);
-      const kayit = { id, x: +y.x, y: +y.y, metin: y.metin || '', kim: y.kim || '', ad: y.ad || '', t: y.t || simdi() };
+      const kayit = { id, x: +y.x, y: +y.y, metin: y.metin || '', tur: y.tur || 'metin', mid: y.mid || '',
+                      kim: y.kim || '', ad: y.ad || '', t: y.t || simdi() };
       durum.yildizlar.push(kayit);
-      olayYolla('yildiz', { id, x: kayit.x, y: kayit.y, metin: kayit.metin }, kayit.kim, kayit.ad, kayit.t);
+      olayYolla('yildiz', { id, x: kayit.x, y: kayit.y, metin: kayit.metin, tur: kayit.tur, mid: kayit.mid },
+                kayit.kim, kayit.ad, kayit.t);
     });
     kok.child('y').on('child_removed', (s) => {
       const id = s.key;
@@ -224,6 +241,34 @@ const Ates = (function () {
       olayYolla('fisilti', { metin: m.metin }, m.kim, m.ad, m.t);
     });
 
+    /* günlük soru */
+    kok.child('gn').on('value', (s) => {
+      const v = s.val();
+      durum.gunluk = {};
+      nesneDizi(v).forEach(([gun, cevaplar]) => {
+        durum.gunluk[gun] = {};
+        nesneDizi(cevaplar).forEach(([kim, c]) => {
+          durum.gunluk[gun][kim] = { metin: c.metin || '', ad: c.ad || '', t: c.t || 0 };
+        });
+      });
+      if (hazir) cagri.olay({ tip: 'gunluk', veri: {}, kim: '', ad: '', t: simdi() });
+    });
+
+    /* zaman kapsülü */
+    kok.child('ks').on('child_added', (s) => {
+      const id = s.key, k = s.val() || {};
+      if (bilinen.ks.has(id)) return;
+      bilinen.ks.add(id);
+      durum.kapsul.push({ id, metin: k.metin || '', acilis: k.acilis || '', kim: k.kim || '', ad: k.ad || '', t: k.t || 0 });
+      durum.kapsul.sort((a, b) => String(a.acilis).localeCompare(String(b.acilis)));
+      olayYolla('kapsul', { id }, k.kim, k.ad, k.t);
+    });
+    kok.child('ks').on('child_removed', (s) => {
+      bilinen.ks.delete(s.key);
+      durum.kapsul = durum.kapsul.filter(k => k.id !== s.key);
+      olayYolla('kapsul-sil', { id: s.key }, '', '');
+    });
+
     /* anlık: imleç ve basılı tutma */
     const anlikIsle = (s) => {
       if (!hazir || s.key === ben.id) return;
@@ -295,8 +340,22 @@ const Ates = (function () {
         case 'yildiz':
           kok.child('y').child(veri.id).set({
             x: +veri.x, y: +veri.y, metin: String(veri.metin || '').slice(0, 280),
+            tur: veri.tur || 'metin', mid: veri.mid || '',
             kim: ben.id, ad: ben.ad, t
           });
+          break;
+        case 'gunluk':
+          kok.child('gn').child(String(veri.gun)).child(ben.id)
+             .set({ metin: String(veri.metin || '').slice(0, 1200), ad: ben.ad, t });
+          break;
+        case 'kapsul':
+          kok.child('ks').child(veri.id).set({
+            metin: String(veri.metin || '').slice(0, 2000), acilis: String(veri.acilis || ''),
+            kim: ben.id, ad: ben.ad, t
+          });
+          break;
+        case 'kapsul-sil':
+          kok.child('ks').child(veri.id || veri).remove();
           break;
         case 'yildiz-sil': {
           const id = veri.id || veri;
@@ -350,6 +409,17 @@ const Ates = (function () {
           kok.child('an').child(ben.id).set({ tip, veri, ad: ben.ad, t });
       }
     } catch (e) { console.warn('[ates] gönderilemedi', tip, e); }
+  }
+
+  /* ---------- medya (ayrı düğüm; ilk yüklemede indirilmez) ---------- */
+  function medyaYaz(mid, veriUrl) {
+    if (!kok) return Promise.resolve();
+    return kok.child('m').child(mid).set(String(veriUrl || ''));
+  }
+  async function medyaAl(mid) {
+    if (!kok || !mid) return null;
+    try { const s = await kok.child('m').child(mid).once('value'); return s.val(); }
+    catch (e) { return null; }
   }
 
   /* ---------- başlat ---------- */
@@ -419,11 +489,14 @@ const Ates = (function () {
     await kok.child('s').remove();
     await kok.child('sn').remove();
     await kok.child('ck').remove();
+    await kok.child('gn').remove();
+    await kok.child('ks').remove();
+    await kok.child('m').remove();
     Object.values(bilinen).forEach(s => s.clear());
     const anlik = await kok.once('value');
     durumKur(anlik.val());
     cagri.hazir();
   }
 
-  return { baslat, dur, yolla, ayril, sayfaBildir, odayiSil };
+  return { baslat, dur, yolla, ayril, sayfaBildir, odayiSil, medyaYaz, medyaAl };
 })();

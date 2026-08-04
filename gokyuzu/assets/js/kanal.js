@@ -26,7 +26,8 @@ const Kanal = (function () {
   let iptal = null;
 
   function bosDurum() {
-    return { yildizlar: [], takimlar: [], cizim: [], kuponlar: {}, uyum: {}, sohbet: [], senkron: { sayi: 0, son: 0 }, cark: null };
+    return { yildizlar: [], takimlar: [], cizim: [], kuponlar: {}, uyum: {}, sohbet: [],
+             senkron: { sayi: 0, son: 0 }, cark: null, gunluk: {}, kapsul: [], medya: {} };
   }
 
   /* ---------- olay dağıtımı ---------- */
@@ -48,7 +49,8 @@ const Kanal = (function () {
     const v = olay.veri || {};
     switch (olay.tip) {
       case 'yildiz':
-        d.yildizlar.push({ id: v.id, x: v.x, y: v.y, metin: v.metin, kim: olay.kim, ad: olay.ad, t: olay.t });
+        d.yildizlar.push({ id: v.id, x: v.x, y: v.y, metin: v.metin, tur: v.tur || 'metin', mid: v.mid || '',
+                           kim: olay.kim, ad: olay.ad, t: olay.t });
         if (d.yildizlar.length > 400) d.yildizlar.shift();
         break;
       case 'yildiz-sil': {
@@ -82,6 +84,21 @@ const Kanal = (function () {
       case 'fisilti':
         d.sohbet.push({ metin: v.metin, kim: olay.kim, ad: olay.ad, t: olay.t });
         if (d.sohbet.length > 150) d.sohbet.shift();
+        break;
+      case 'gunluk': {
+        const g = String(v.gun || '');
+        if (!d.gunluk[g]) d.gunluk[g] = {};
+        d.gunluk[g][olay.kim] = { metin: v.metin, ad: olay.ad, t: olay.t };
+        break;
+      }
+      case 'kapsul':
+        d.kapsul.push({ id: v.id, metin: v.metin, acilis: v.acilis, kim: olay.kim, ad: olay.ad, t: olay.t });
+        break;
+      case 'kapsul-sil':
+        d.kapsul = d.kapsul.filter(k => k.id !== (v.id || v));
+        break;
+      case 'medya':
+        d.medya[v.mid] = v.veri;
         break;
     }
   }
@@ -323,6 +340,22 @@ const Kanal = (function () {
 
   /* Eşi bulurken kimliğe değil ROLE bakılır. Aynı kişi iki cihazdan
      girdiğinde (telefon + bilgisayar) kendini eş sanmasın diye. */
+  /* ---------- medya (fotoğraf / ses) ---------- */
+  async function medyaYaz(mid, veriUrl) {
+    if (mod === 'firebase') return Ates.medyaYaz(mid, veriUrl);
+    await yolla('medya', { mid, veri: veriUrl });
+  }
+  async function medyaAl(mid) {
+    if (!mid) return null;
+    if (durum.medya && durum.medya[mid]) return durum.medya[mid];
+    if (mod === 'firebase') {
+      const v = await Ates.medyaAl(mid);
+      if (v) durum.medya[mid] = v;
+      return v;
+    }
+    return null;
+  }
+
   function es() {
     // 1. tercih: rolü benden farklı VE çevrimiçi olan
     // 2. tercih: rolü bilinmeyen ama çevrimiçi (eski sürümden bağlanmış olabilir)
@@ -353,7 +386,7 @@ const Kanal = (function () {
   }
 
   return {
-    baslat, dur, on, off, yolla, ayril, sayfaBildir, odayiSil,
+    baslat, dur, on, off, yolla, ayril, sayfaBildir, odayiSil, medyaYaz, medyaAl,
     get mod() { return mod; },
     get ben() { return ben; },
     get durum() { return durum; },

@@ -158,7 +158,42 @@ window.AYAR = {
   /* --- 14) FISILTI (canlı sohbet) hazır cevaplar ---------- */
   hizliFisiltilar: ["Seni özledim 🤍", "Buradayım 👀", "Sarıl bana", "Gel buraya", "❤️", "😂", "Ne yapıyorsun?"],
 
-  /* --- 15) TEKNİK ------------------------------------------ */
+
+  /* --- 16) GÜNLÜK SORULAR ---------------------------------
+     Her gün otomatik olarak biri seçilir (aynı gün ikinizde
+     de aynı soru çıkar). İstediğin kadar ekleyebilirsin.     */
+  gunlukSorular: [
+    "Bugün seni ne güldürdü?",
+    "Bugün bana söylemeyi unuttuğun bir şey var mı?",
+    "Şu an aklından geçen ilk şey ne?",
+    "Bugün için minnettar olduğun bir şey yaz.",
+    "Bugün kendinle gurur duyduğun bir an oldu mu?",
+    "Şu anda en çok neye ihtiyacın var?",
+    "Bugün beni ne zaman düşündün?",
+    "Bu hafta birlikte yapmak istediğin bir şey?",
+    "Bugünü tek kelimeyle anlatsan?",
+    "Seni bugün ne yordu?",
+    "Son zamanlarda fark ettiğin, benim yaptığım küçük bir şey?",
+    "Bugün olmasını istediğin ama olmayan ne vardı?",
+    "Aklından geçen ama söylemeye çekindiğin bir şey?",
+    "Bugün kendine iyi geldin mi? Nasıl?",
+    "Bir yıl sonra bugünü hatırlarsan aklına ne gelsin isterdin?",
+    "Bugün seni en çok ne şaşırttı?",
+    "Şu an burada olsaydım ne yapardık?",
+    "Bu aralar en çok neyi merak ediyorsun?",
+    "Bugün birine iyilik yaptın mı, sana yapan oldu mu?",
+    "En son ne zaman içten içe rahatladın?",
+    "Bugün canını sıkan küçük bir şey neydi?",
+    "Bu hafta seni en çok ne mutlu etti?",
+    "Şu an bir yere ışınlanabilsen nereye giderdin?",
+    "Bana bugün hangi şarkıyı dinletmek isterdin?",
+    "Bugün nasıl uyudun, ne rüya gördün?",
+    "Beraber en son ne zaman doyasıya güldük?",
+    "Bugün kendine ne söyledin?",
+    "Bir dileğin gerçekleşse bugün ne dilerdin?"
+  ],
+
+  /* --- 17) TEKNİK ------------------------------------------ */
   teknik: {
     api: "api/kanal.php",   // kendi sunucundaki PHP kanalı
     muzikVarsayilanAcik: false,

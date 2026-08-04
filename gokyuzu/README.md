@@ -194,8 +194,36 @@ Birkaç dakika içinde `https://erenyamic.github.io` adresinde yayında olur.
    Artık aynı gökyüzündesiniz.
 
 **Aynı anda olmanız gerekenler:** Kalp Senkronu, Uyum Testi, Birlikte Çiz, Kader Çarkı.
-**Ayrı ayrı da olur:** Yıldız Haritası, Kuponlar, Fısıltı, Sayaç, Zaman Tüneli, Mektup —
-sen bırakırsın, o girdiğinde görür.
+**Ayrı ayrı da olur:** Yıldız Haritası, Anı Duvarı, Günün Sorusu, Zaman Kapsülü,
+Kuponlar, Fısıltı, Sayaç, Zaman Tüneli, Mektup — sen bırakırsın, o girdiğinde görür.
+
+### 📷 Fotoğraf ve 🎙️ ses
+Yıldız Haritası'nda yazı kutusunun yanındaki **📷** ile fotoğraf, **🎙️** ile 15 saniyeye
+kadar ses bırakabilirsin. Hepsi **Anı Duvarı** odasında polaroid gibi birikir.
+Fotoğraflar tarayıcıda küçültülüp yüklenir, ayrı bir depolama servisi gerekmez.
+
+### 📔 Günün Sorusu
+Her gün otomatik yeni bir soru. İkiniz de cevaplayana kadar kimse diğerininkini görmez.
+Cevaplar arşivde birikir; bir yıl sonra "geçen yıl bugün" bölümü kendiliğinden çıkar.
+Soruları `config.js` → `gunlukSorular` içinden değiştirebilirsin.
+
+### ⏳ Zaman Kapsülü
+Bugün yaz, açılış tarihini sen seç. O gün gelene kadar kapalı durur, o gün ikinize açılır.
+
+> Dürüst not: kapsülün kilidi **arayüz kilidi**. İçeriği okumak isteyen biri tarayıcının
+> geliştirici araçlarını açıp verilere bakabilir. Şifreleme değil — merak edip bakmaya
+> karşı değil, sürprizi bozmamaya yarıyor.
+
+### 📱 Telefona ekleme ve bildirimler
+Üst köşedeki **📲** ile siteyi telefonuna uygulama olarak ekleyebilirsin
+(iPhone'da: Safari → Paylaş → Ana Ekrana Ekle). Böylece tam ekran açılır ve
+internetin gitse bile uygulama açılır.
+
+**🔕 / 🔔** düğmesiyle bildirimlere izin verirsen, uygulama açıkken ya da arka plandayken
+eşin bir şey yaptığında bildirim alırsın.
+
+> Uygulama **tamamen kapalıyken** bildirim gelmesi için mesajı gönderen bir sunucu gerekir
+> (Firebase Cloud Functions → Blaze planı, kredi kartı ister). Ücretsiz planda bu kısım yok.
 
 > **Tek bilgisayarda denemek için:** ikinci kişiyi gizli pencerede aç,
 > ya da adresin sonuna `?ben=o` ekle (`siteadresin/?ben=o`).
@@ -276,6 +304,13 @@ Aynı tarayıcıdan giriyorsunuz. Biriniz gizli pencere kullansın ya da ana say
 
 Bütün yıldızlar, çizimler, kuponlar ve sohbet sıfırlanır.
 
+**Dosyaları değiştirdim ama sitede eski hâli görünüyor**
+Tarayıcı önbelleği. İki yeri birlikte güncelle:
+1. `index.html` içindeki `?s=3` sayılarını `?s=4` yap (topluca değiştir),
+2. `sw.js` içindeki `SURUM = 'ag-v3'` satırını `'ag-v4'` yap ve alttaki listedeki
+   `?s=3`'leri de `?s=4` yap.
+Böylece hem tarayıcı hem de kurulu uygulama yeni dosyaları alır.
+
 **Mektuptaki yazı çok hızlı/yavaş akıyor**
 `assets/js/views/mektup.js` içinde `setInterval(yaz, 26)` satırındaki sayıyı değiştir.
 
@@ -285,6 +320,8 @@ Bütün yıldızlar, çizimler, kuponlar ve sohbet sıfırlanır.
 
 ```
 index.html                 tek sayfa — bütün odalar burada açılır
+manifest.webmanifest       telefona kurulum bilgileri
+sw.js                      çevrimdışı açılış (servis çalışanı)
 api/                       (sadece A yolu için; Firebase kullanıyorsan gereksiz)
   kanal.php                gerçek zamanlı kanal (long-polling)
   veri/                    oda verileri (otomatik oluşur, yazılabilir olmalı)
@@ -294,6 +331,8 @@ assets/
   js/
     config.js              ⭐ kişiselleştirme burada
     utils.js               yardımcılar, konfeti, bildirim
+    medya.js               fotoğraf küçültme, ses kaydı
+    pwa.js                 telefona kurulum, bildirimler
     kanal.js               kanal yöneticisi — hangi yol varsa onu seçer
     kanal-firebase.js      Firebase taşıyıcısı (B yolu)
     arkaplan.js            yıldızlı gökyüzü, kayan yıldızlar
