@@ -82,7 +82,7 @@ body.beraber .aurora { opacity: .85; }
   position: relative; z-index: 2;
   max-width: 1080px;
   margin: 0 auto;
-  padding: calc(var(--ust) + 14px) 20px 130px;
+  padding: calc(var(--ust) + env(safe-area-inset-top, 0px) + 14px) 20px 130px;
   min-height: 100dvh;
   transition: opacity .24s ease, transform .24s ease;
 }
@@ -92,7 +92,8 @@ body.beraber .aurora { opacity: .85; }
 .tepe {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   display: flex; align-items: center; gap: 14px;
-  padding: 10px max(16px, env(safe-area-inset-left)) 10px max(16px, env(safe-area-inset-right));
+  padding: calc(10px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right))
+           10px max(16px, env(safe-area-inset-left));
   background: linear-gradient(180deg, rgba(6,3,14,.88), rgba(6,3,14,.35) 70%, transparent);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
@@ -376,7 +377,8 @@ body.beraber .aurora { opacity: .85; }
 @keyframes dogdu { from { opacity:0; transform: scale(.1); } to { opacity:1; transform: scale(1); } }
 
 .yildiz-balon {
-  position: absolute; z-index: 6; width: max-content; max-width: min(280px, 70vw);
+  position: absolute; z-index: 6; width: max-content; max-width: min(280px, 76vw);
+  max-height: min(56vh, 420px); overflow-y: auto; overscroll-behavior: contain;
   padding: 13px 16px; border-radius: var(--r-md);
   background: rgba(18,10,36,.94); border: 1px solid var(--çizgi-2);
   box-shadow: var(--golge); font-size: 13.5px; line-height: 1.55;
@@ -800,6 +802,13 @@ body.beraber .aurora { opacity: .85; }
 /* ---------- Küçük ekran ---------- */
 @media (max-width: 560px) {
   :root { --ust: 64px; }
+  .tepe { gap: 8px; }
+  .tepe-sag { gap: 5px; }
+  .ikon-dugme { width: 33px; height: 33px; font-size: 14px; }
+  .ikon-dugme.buyukce { width: 44px; height: 44px; font-size: 17px; }
+  .rozet { width: 30px; height: 30px; font-size: 13px; }
+  .bag { width: 18px; }
+  .marka { font-size: 15px; }
   #uygulama { padding-left: 15px; padding-right: 15px; }
   .durum-yazi { display: none; }
   .kure-agi { grid-template-columns: 1fr 1fr; gap: 11px; }
@@ -807,6 +816,17 @@ body.beraber .aurora { opacity: .85; }
   .kure h3 { font-size: 15px; }
   .kure p { font-size: 11.8px; }
   .sayac-birim { min-width: 68px; padding: 14px 8px; }
+
+  /* Yıldız formu: giriş kutusu tam satır, düğmeler altta.
+     Sağ altta yüzen fısıltı düğmesinin üstüne binmesin diye
+     son satırın sağında yer bırakılıyor. */
+  .yildiz-form { gap: 9px; }
+  .yildiz-form input { flex: 1 1 100%; }
+  .yildiz-form .ikon-dugme.buyukce { order: 2; }
+  .yildiz-form button[type="submit"] { order: 3; flex: 1 1 auto; margin-right: 62px; }
+
+  /* aynı gerekçeyle: sayfanın sağ alt köşesindeki içerik nefes alsın */
+  #uygulama { padding-bottom: 150px; }
 }
 
 /* ============================================================
@@ -846,9 +866,11 @@ body.beraber .aurora { opacity: .85; }
 
 .yildiz-balon .balon-medya { margin-bottom: 9px; }
 .yildiz-balon .balon-medya img {
-  display: block; width: 100%; max-width: 240px; border-radius: 10px; cursor: zoom-in;
+  display: block; width: auto; max-width: 100%;
+  max-height: min(34vh, 240px); object-fit: contain;
+  border-radius: 10px; cursor: zoom-in; margin: 0 auto;
 }
-.yildiz-balon .balon-medya audio { width: 240px; max-width: 100%; height: 38px; }
+.yildiz-balon .balon-medya audio { width: min(240px, 66vw); max-width: 100%; height: 38px; }
 
 .foto-perde { cursor: zoom-out; }
 .foto-perde img {
